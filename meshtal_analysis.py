@@ -16,31 +16,31 @@ mpl.use('Agg')
 class meshtally:
     """Mesh tally object data"""
     def __init__(self):
-        idnum = None
-        ptype = None
-        x_bounds = None
-        y_bounds = None
-        z_bounds = None
-        e_bounds = None
-        t_bounds = None
+        self.idnum = None
+        self.ptype = None
+        self.x_bounds = None
+        self.y_bounds = None
+        self.z_bounds = None
+        self.e_bounds = None
+        self.t_bounds = None
         self.data = []
-        x_mids = None
-        y_mids = None
-        z_mids = None
-        ctype = None
+        self.x_mids = None
+        self.y_mids = None
+        self.z_mids = None
+        self.ctype = None
 
 
 class slice_object:
     """Slice object containing data info"""
     def __init__(self):
-        values = None
-        errors = None
-        axis_mids = None
-        slice_i = None
-        slice_j = None
-        i_lab = None
-        j_lab = None
-        value = None
+        self.values = None
+        self.errors = None
+        self.axis_mids = None
+        self.slice_i = None
+        self.slice_j = None
+        self.i_lab = None
+        self.j_lab = None
+        self.value = None
 
 
 def rel_err_hist(df, fname=None):
@@ -56,6 +56,7 @@ def rel_err_hist(df, fname=None):
         plt.show()
 
     return plot[0]
+
 
 def filter_energy_time(data, erg=None, time=None):
     """ Filters columns by energy or time parameter"""
@@ -99,7 +100,7 @@ def extract_slice(mesh, value, plane, erg=None, time=None):
     else:
         "Catch plane not recognised"
         raise ValueError("Plane not recognised format : XZ, XY, YZ")
-    
+
     # find closest mid point
     slice_obj.value = find_nearest_mid(value, slice_obj.axis_mids)
 
@@ -123,7 +124,9 @@ def extract_slice(mesh, value, plane, erg=None, time=None):
 
 
 def create_plot(slice_obj, values, title, ax, lmin, lmax):
-    plot = ax.pcolormesh(slice_obj.slice_i, slice_obj.slice_j, values,  norm=colors.LogNorm(vmin=lmin, vmax =lmax))
+    plot = ax.pcolormesh(
+        slice_obj.slice_i, slice_obj.slice_j, values, norm=colors.LogNorm(
+            vmin=lmin, vmax=lmax))
     plt.colorbar(plot, ax=ax)
     ax.set_title(title)
     ax.set_xlabel(slice_obj.i_lab)
@@ -214,7 +217,7 @@ def extract_line(mesh, p1, p2, erg=None, time=None):
         z = find_nearest_mid(z, mesh.z_mids)
         data = data[data["z"] == z]
 
-    #filter for energy/time selection
+    # filter for energy/time selection
     data = filter_energy_time(data, erg, time)
     result = data["value"]
 
@@ -289,7 +292,7 @@ def add_mesh(mesh1, mesh2):
         new_mesh.x_bounds = mesh1.x_bounds
         new_mesh.y_bounds = mesh1.y_bounds
         new_mesh.z_bounds = mesh1.z_bounds
-        
+
         new_mesh.x_mids = calc_mid_points(mesh1.x_bounds)
         new_mesh.y_mids = calc_mid_points(mesh1.y_bounds)
         new_mesh.z_mids = calc_mid_points(mesh1.z_bounds)
@@ -364,8 +367,8 @@ def read_mesh(path):
                 tnum = int(line.split(" ")[-1])
                 mesh.idnum = tnum
             if in_data:
-                    data = " ".join(line.split())
-                    mesh.data.append(data.split())
+                data = " ".join(line.split())
+                mesh.data.append(data.split())
             elif "X direction:" in line:
                 line = " ".join(line.split())
                 mesh.x_bounds = line.split(" ")[2:]
@@ -386,15 +389,15 @@ def read_mesh(path):
                 mesh.t_bounds = line.split(" ")[3:]
             elif ("Energy         X         Y         Z     Result" in line):
                 in_data = True
-              
+
             elif ("Time         X         Y         Z     Result" in line):
                 in_data = True
                 mesh.ctype = "6col_t"
-                
+
             elif "X         Y         Z     Result" in line:
                 in_data = True
                 mesh.ctype = "5col"
-            
+
             elif "mesh tally." in line:
                 line = " ".join(line.split())
                 mesh.ptype = line.split(' ')[0]
@@ -404,7 +407,8 @@ def read_mesh(path):
         meshes[i].data = convert_to_df(mesh)
 
     return meshes
-  
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Meshtally ploting")
     parser.add_argument("input", help="path to the Meshtal file")
