@@ -125,6 +125,7 @@ class find_mesh_tally_num_test(unittest.TestCase):
         self.assertEqual(ma.find_mesh_tally_numbers(data), {214: 4})
 """""
 
+
 class add_mesh_test(unittest.TestCase):
 
     def test_add_mesh_error(self):
@@ -369,21 +370,21 @@ class filter_energy_time_tests(unittest.TestCase):
 
 
 class meshes_tests(unittest.TestCase):
-    
+
     def test_read_multiple_meshes(self):
-        
+
         mesh_1 = ma.read_mesh(meshes_path)[0]
         self.assertEqual(mesh_1.ptype, 'neutron')
         self.assertEqual(mesh_1.idnum, 4)
         self.assertEqual(mesh_1.ctype, '6col_e')
-        
+
         mesh_2 = ma.read_mesh(meshes_path)[1]
         self.assertEqual(mesh_2.ptype, 'neutron')
         self.assertEqual(mesh_2.idnum, 14)
         self.assertEqual(mesh_2.ctype, '5col')
         self.assertEqual(mesh_2.x_mids[0], -20)
-        
-        
+
+
 class slice_tests(unittest.TestCase):
 
     def test_slice_plot(self):
